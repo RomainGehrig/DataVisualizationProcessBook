@@ -45,11 +45,7 @@ We considered a couple of datasets for this project, but we could not find one t
 ## Data Processing and Exploratory Data Analysis
 
 ### Data Processing
-{TO BE ADDED}
-
-The raw data were coming as zipped files, each containing a CSV with one month worth of data. The size was quite consequent with 8MB archives expanding as 200MB CSV files. For the processing, we used Python and Pandas (as we are familiar with the tool) to extract the data we wanted because there is way we could have served the raw information over the network and process it in Javascript in real time. The plan was to make an aggregation by month of the data we needed and discard unused columns
-
-CSV to JSON for Sankey, CSV to CSV for the rest
+The raw data were coming as zipped files, each containing a CSV with one month worth of data. The size was quite consequent with 8MB archives expanding as 200MB CSV files. For the processing, we used Python and Pandas (as we are familiar with the tool) to extract the data we wanted because there is way we could have served the raw information over the network and process it in Javascript in real time. The plan was to make an aggregation by month of the data we needed and discard unused columns. For each month, we aggregated the delays for each airport and the data reduced to around 300KB per month for the delays informations and 600KB per month for the Sankey informations. This amount of data is relatively fast to download even on an average internet connection (GitHub also apparently sends GZipped files).
 
 * We also checked the data for unusual values, for example we had NaNs for delay time when there was no delay or no data available.
 
@@ -83,6 +79,10 @@ We also modified the target audience. Once we had a closer look at the data, we 
 
 And finally we modified this research question: Which airports are have the most/least delays? By also adding a "And why?" at the end. Since we have access to the Cause of Delay data, we want to know why flights are delayed and not just how much.
 
+We decided also decided to drop the Time of Day/Week visualization. We did some tests, and have the following sample visualization. 
+![enter image description here](https://raw.githubusercontent.com/sourabhlal/FlightDelaysViz/master/images/weekdays.jpeg)
+However we dropped it as it was congesting our overall visualization tool. 
+
 ## Designs: What are the different visualizations you considered?
 We considered several different ways to visualize our data so that we could answer our research questions.
 
@@ -90,10 +90,10 @@ We considered several different ways to visualize our data so that we could answ
 * We started off with idea of a choropleth as we felt it would be good way to identify regions with a high average delay. Upon clicking each region we can see the individual airports in it. However we had problem as we don’t get the bigger picture. An example of where this an issue is New York City. John F. Kennedy Airport is within the state, whereas Newark Airport is across the state border. It would be a really bad visualization if someone wanted to compare the two airports but had to switch states each time.
 
 * A second consideration for us was to use a heatmap, with markers on it for each airport, and the background colour would reflect the overall delay. However we had problem when it came to the colour coding. A heatmap would give an inaccurate representation of the data as when several airports are near each other it would greatly exaggerate the delay. Further every airport that was isolated but had a low delay would almost disappear as the colour scheme was dominated by the airports with very high delays.
-{include image}
+![enter image description here](https://raw.githubusercontent.com/sourabhlal/FlightDelaysViz/master/images/heatmap.jpeg)
 
 * In the end we decided to show all airports with markers. We colour coded the markers in order to provide information on the mean of the delays experienced by the flights departing from that airport and adjusted the size of the marker according to the volume of traffic passing through the airport. Further we felt that having a cluster of markers with would still provide us with information of regional trends as if such a trend exists the markers in the region should have similar colours.
-* *Colour choice*: The colours of our markers vary from a pale yellow to dark red. We chose this colour scheme as it contrasted our background, and so the markers stood out. Further we used red for the most delayed airports as the colour has a negative connotation and stands for danger.
+* *Colour choice*: The colours of our markers vary from a pale yellow to dark red. We chose this colour scheme as it contrasted our background, and so the markers stood out. Further we used red for the most delayed airports as the colour has a negative connotation and stands for danger. 
 * *Marker size*: Visually highlights the more important airports. Doesn’t make a big difference if a tiny airport with 1 flight has a large delay or not, but bigger ones are more important as they are used by many more people and have a greater effect on people’s lives, and so we want these airports to stand out a bit more than the smaller ones. We classified all the airports into 5 size categories based on the volume of flight traffic passing through them in the given time period.
 
 2. **Cause of Delay visualization**
@@ -107,23 +107,52 @@ We considered several different ways to visualize our data so that we could answ
 * Design choices:
   * *Colour coding of nodes*: The node colour was initially randomly distributed so that neigbouring nodes were not the same colour. However this looked confusing, as it just added noise to the visualization and took away from what we were trying to show.  We considered changing this to a plain fixed colour, but eventually decided to use the colour coding to our advantage and add some data that can lead to a more meaningful visual: the average delay at the airport. Here again we have used the D3 Magma predefined color scale.
   * *Color coding of links*: We initially started with continuous range with flights with least delay coloured green, the most delay coloured red, and in between it was yellow. This led to very visually appealing sankey graphs, but it didn’t highlight our key data.
-Therefore we decided to set colour cut-offs - where the filghts regularly arriving early are shaded in shades of green, and delayed flights are in shades of red. In between we have flights that are on time.
+![enter image description here](https://raw.githubusercontent.com/sourabhlal/FlightDelaysViz/master/images/rainbow-jfk.jpeg)
+Therefore we decided to set colour cut-offs - where the filghts regularly arriving early are shaded in shades of green, and delayed flights are in shades of red. In between we have flights that are on time. 
 4. Timeline Element
 We wanted to be able to see how our data changed through time. To do so we liked the idea of having a timeline with a slider. Initially we planned to have it at the top of the webpage, but once we implemented it looked out of place, and so we changed it and put it at the bottom.
 
 **The Layout**
 Our idea for the webpage evolved. What was clear though was that our main interface would show the Map layout, and the other visualizations would be in a panel that could be opened and closed when a particular airport was clicked.
 
-{add images}
+Our original plan:
+![enter image description here](https://raw.githubusercontent.com/sourabhlal/FlightDelaysViz/master/images/thefutureisnow.jpeg)
 
-## Implementation: Describe the intent and functionality of the interactive visualizations you implemented.
+
+
+
+## Implementation: Describe the intent and functionality of the interactive visualizations you implemented. 
 1. **Map view**
+Here is the overview of our final visualization. When you first open our visualization you see the following:
+
+![](https://raw.githubusercontent.com/sourabhlal/FlightDelaysViz/master/images/fullscreen.png)
+
+In this view you can see our Map Visualization on the left, and our Cause of Delay visualization on the right. Initially this Cause of Delay visualization is blank, but as soon as you hover on any of the airports on the map it will update the Cause of Delay visualization on the right. As you hover over different cities you can see that this visualization changes. This is so that we can compare and contrast airports’ delays.
+
+![enter image description here](https://raw.githubusercontent.com/sourabhlal/FlightDelaysViz/master/images/graph-delay.png)
+
+Further you can zoom in on the map if you want to explore a smaller area.
+
+You will also notice a time slider at the bottom of the screen. You can click anywhere on this an make a window of size 1 month or greater. You can move this window around and see how the airport delays increase and decrease and how the volume of traffic through them increases and decreases though the year.
+![enter image description here](https://raw.githubusercontent.com/sourabhlal/FlightDelaysViz/master/images/timewindow.png)
+If you click on any of the airports it will open up our side panel which contains an airport specific analysis. This will be explained in further detail in the next section. You can click on the arrow in the top right corner to go back.
+![enter image description here](https://raw.githubusercontent.com/sourabhlal/FlightDelaysViz/master/images/graph-sankey.png)
 2. **Cause of Delay visualization**
+This is our most simple visualization. We show a breakdown of time period selected with the amount of delays on the y-axis of the bar chart. This is used to get an idea of how much of a delay there was on a particular day.
+![](https://raw.githubusercontent.com/sourabhlal/FlightDelaysViz/master/images/only-delay.png)
+Below the bar chart we have a colour coded table that shows the distribution of the cause of delay for the corresponding column. We have explained the what the colours mean on the scale in the top right of the visualization.
 3. **Visualizing Delay Transmission**
+In this visualization we used a Sankey diagram to show incoming and outgoing flights from an airport. On the left we have the incoming flights and on the right we have the outgoing flights.
 
-To colour code we had to set a minimum acceptable delay as we do not want to highlight flights that are just 1 minute late. After doing a lot of tests, we concluded that a cut off around 20 minutes lead to the most interesting results.
+The colour of the links represents the number of minutes the flight is delayed, and the colour of the nodes represents how delayed the airport is relative to all other airports in the region. Note: To colour code we had to set a minimum acceptable delay as we do not want to highlight flights that are just 1 minute late. After doing a lot of tests, we concluded that a cut off around 20 minutes lead to the most interesting results.
 
-![](https://raw.githubusercontent.com/sourabhlal/FlightDelaysViz/master/images/graph-sankey.png)
+![enter image description here](https://raw.githubusercontent.com/sourabhlal/FlightDelaysViz/master/images/only-sankey.png)
+
+Further interactive elements we have here are if you hover on a link on one side of the visualization, we highlight both that link, but also the corresponding link on the other side. For example if you hover on the link JFK --> SFO, both links JFK-->SFO and SFO-->JFK are highlighted so that the viewer can see the information for both directions of a route.
+
+Secondly if a user is interested in seeing the information about another airport in the Sankey, the user can do so simply by clicking on a link. For example when viewing the Sankey for JFK, clicking on the link JFK-->SFO will load the information for SFO. This is intended to give the user a sense of flow and ease of exploration when viewing the data visualization. He/she does not need to go back to the map view and search for a particular airport.
+
+
 
 
 ## Evaluation
@@ -134,13 +163,13 @@ We were able to get alot of insight into the data just by looking at our visuali
 In summary, we felt that we were able to get some interesting insights into the data
 
 ###How did you answer your questions?
-Out of our original 6 questions, we discarded the 2 about airlines. We were able to answer the remaining 4 of them to some degree.
+Out of our original 6 questions, we discarded the 2 about airlines. We were able to answer the remaining 4 of them to some degree. 
 
 ##### Which airports are have the most/least delays? And why?
 We cannot directly answer this question as an overall "winner" or "loser" as we noticed that delays change with time. So what we can answer is which ones have large or tiny delays at any given point in time. This is made clear when we look at our map, and see which airports are the darkest shade of red. We can clarify our suspicion further by hovering over it and seeing the average daily delay in the side panel.
 
 ##### Which airports catch-up the most? (reduce delay between departure delay and arrival delay)
-We are able to answer this question by looking at the Sankey diagram -  which shows how much of the delay is transmitted from arriving flights to departures. We were able to identify some airports were very efficient, and even though flights were departing with a delay, it was a reduction on the arrival delay.
+We are able to answer this question by looking at the Sankey diagram -  which shows how much of the delay is transmitted from arriving flights to departures. We were able to identify some airports were very efficient, and even though flights were departing with a delay, it was a reduction on the arrival delay. 
 
 ##### Can we see which region or country has the greatest delay?
 Again this is not a question that can be answered outright, however our map visualization showed us that there can be entire regions with a delay at a particular moment in time. For example the entire Eastern seaboard had huge delays during the months of June and July 2016, while the Western seaboard was relatively delay free. At other times other regions also have delays, although none as significant as this one.
@@ -155,7 +184,7 @@ Yes we are able to answer this through our visualization, although not in the wa
 We feel it works fairly well although there are several glitches that should be fixed and improvements that can be made:
 
  1. We were not able to tame the Sankey diagram - it drove us crazy. The D3 library sometimes made some weird looking graphs when there were alot of nodes, and we no idea how to control this. We would like to further improve this. Further, we observed that Firefox doesn't correctly render the Sankey diagram, we are unclear about why this is the case and would like to fix this.
- 2. We want to increase the granularity of the timescale. Right now we limited it to a minimum length of 1 month, however to better observe trends in the data we ideally want to make it work at a 1 day granularity. The reason we did this was due to the huge amount of data pre-processing we need to do to accommodate for all permutations. Currently all our data is processed in 1 month batches.
+ 2. We want to increase the granularity of the timescale. Right now we limited it to a minimum length of 1 month, however to better observe trends in the data we ideally want to make it work at a 1 day granularity. The reason we did this was due to the huge amount of data pre-processing we need to do to accommodate for all permutations. Currently all our data is processed in 1 month batches. 
  3. We also want to find a way to handle edge cases such as when an airport is closed due to some reason (for example airports in Florida during Hurricane Irma). Currently this closure means that there is a negative effect on our visualization and instead of increasing the average delays for the airport it reduces it. We are not sure at this point how we would fix this, but it is something we would like to work on.
  4. We would like to add a filter on the map where we can select the amount of delay and/or the airport size in order to even more clearly examine without accidentally hovering on a type of airport we don't want to see.
  5. We would love to make this work with data from the whole world, and see even more interesting global trends in aviation delays!
@@ -168,3 +197,9 @@ We feel it works fairly well although there are several glitches that should be 
 | Contribution | Yes   |  Yes   |Yes|
 | Respect for others’ ideas | Yes    |  Yes  |Yes|
 | Flexibility | Yes   |  Yes   |Yes|
+
+
+
+
+
+
