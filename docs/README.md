@@ -1,7 +1,4 @@
 # Process book
-##Table of Contents:
-[TOC]
-
 ## Project Proposal
 
 ### Overview
