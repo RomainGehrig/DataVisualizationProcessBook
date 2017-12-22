@@ -171,13 +171,13 @@ We are able to answer this question by looking at the Sankey diagram -  which sh
 ##### Can we see which region or country has the greatest delay?
 Again this is not a question that can be answered outright, however our map visualization showed us that there can be entire regions with a delay at a particular moment in time. For example the entire Eastern seaboard had huge delays during the months of June and July 2016, while the Western seaboard was relatively delay free. At other times other regions also have delays, although none as significant as this one.
 
-#####When are delays at their most? (Time of day/week/year)
+##### When are delays at their most? (Time of day/week/year)
 As mentioned earlier in the process book, we decided to drop the Time of Day/Week visualization. However our visualization can be used to show how delays evolve though the year by sliding the timescale. We can see that in both years delays shoot up in the summer in many airports on the east coast, and drop in the spring and autumn. We also see that delays increased during December all across the country, in particular on the west coast. We can observe this sort of behavior at multiple granularity levels such as country, region, state or even particular airport simply by zooming in and out on the map.
 
-#####Can we identify particular events just by looking at the delays provoked (For example when the volcano Eyjafjallajökull erupted in Iceland causing severe disruptions across Europe)
+##### Can we identify particular events just by looking at the delays provoked (For example when the volcano Eyjafjallajökull erupted in Iceland causing severe disruptions across Europe)
 Yes we are able to answer this through our visualization, although not in the way we expected. We had imagined we would see massive delays in certain regions at the time of a natural disaster, however we cant see this in our map as the minimum time period was one month. So unless the effect of an event was long lasting, we can't see it on the map, for example after Hurricane Irma in September 2017, all of Puerto Rico's airports were red. For shorter events we can observe this in the Cause of Delay visualization. We can observe certain days have much higher delays than other by hovering over an airport. We also noticed some interesting edge cases this way, for example again after Hurricane Irma, many airports in Florida were closed for a few days, and due to that the total delay on those days was 0. This is something we didn't expect and is part of the reason why it wasn't easy to view these events on the map where we look at the average delays.
 
-###How well does your visualization work, and how could you further improve it?
+### How well does your visualization work, and how could you further improve it?
 We feel it works fairly well although there are several glitches that should be fixed and improvements that can be made:
 
  1. We were not able to tame the Sankey diagram - it drove us crazy. The D3 library sometimes made some weird looking graphs when there were alot of nodes, and we no idea how to control this. We would like to further improve this. Further, we observed that Firefox doesn't correctly render the Sankey diagram, we are unclear about why this is the case and would like to fix this.
