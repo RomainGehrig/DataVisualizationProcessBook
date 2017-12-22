@@ -10,11 +10,11 @@ We were motivated for this project as we often face flight delays when travellin
 ### Target Audience:
 Travelers
 
-###Related work and inspiration:
+### Related work and inspiration:
 One of the inspirations behind the project is [FlightRadar24](https://www.flightradar24.com/), which is a tool that enables anyone to see the real time position of a plane. Not only does this website have a very appealing and easy to understand visualization, but it has become a very popular tool for people to check where a particular plane has reached on its flight path. We would love it if our visualization could have a similar feel to it, but with a focus on airports instead of airplanes.
 The following are a couple of projects we found during our research to find related work:
 
-####Tufts Enigma
+#### Tufts Enigma
 ![Tufts Enigma Visualization](https://raw.githubusercontent.com/sourabhlal/FlightDelaysViz/master/images/tuft.png)
 
 In this [visualization](http://tuftsenigma.org/airport-flight-delays/), there is a chord diagram that shows the 100 airports with the most traffic in the US. It highlights which routes have the least-most delay with a colour-scale from green to red. Further you can choose what time period you want to see the analysis for.
